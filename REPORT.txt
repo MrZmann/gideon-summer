@@ -1,11 +1,18 @@
 Why doesn't the starter code compile? How did you fix it?
 
+There is an issue with include guards, because Products are being defined twice. This is fixed by adding "#pragma once" to the top of product.h
+
 What are the average and worst case time complexities for each map operation?
 
-How many collisions are you getting with your chained implementaion? How long
-was the longest list of collisions? Describe exactly what you measured and how;
-consider making a new test case with more insertions. How can you reduce the
-number of collisions? 
+O(1); O(length) in the worst case
 
-Is there any code between your two implementations of stdmap.h and chained.h
-that can be reused or refactored?
+How many collisions are you getting with your chained implementaion? 
+
+How long was the longest list of collisions?
+
+Describe exactly what you measured and how; consider making a new test case with more insertions.
+
+How can you reduce the number of collisions? 
+
+Is there any code between your two implementations of stdmap.h and chained.h that can be reused or refactored?
+

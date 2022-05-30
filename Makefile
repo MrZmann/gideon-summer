@@ -1,4 +1,4 @@
 std:
-	g++ test.cc -o test -DUSE_STD_MAP
+	g++ test.cc stdmap.cpp -o test -DUSE_STD_MAP
 chained:
-	g++ test.cc -o test -DUSE_CHAINED_MAP
+	g++ test.cc stdmap.cpp -o test -DUSE_CHAINED_MAP
