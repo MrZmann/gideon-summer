@@ -8,5 +8,7 @@ include_directories(.)
 add_executable(gideon_summer
         chained.h
         product.h
-        stdmap.h
-        test.cc stdmap.cpp)
+        #stdmap.h
+        test.cc
+        #stdmap.cpp
+        chained.cpp)
