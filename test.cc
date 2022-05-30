@@ -1,12 +1,12 @@
 #include "product.h"
 
-#ifdef USE_STD_MAP
-    #include "stdmap.h"
-#endif
-
-#ifdef USE_CHAINED_MAP
+//#ifdef USE_STD_MAP
+//    #include "stdmap.h"
+//#endif
+//
+//#ifdef USE_CHAINED_MAP
     #include "chained.h"
-#endif
+//#endif
 
 
 #include <iostream>
@@ -38,6 +38,11 @@ int main(){
         std::cout << "\tPrice: " << prod->price << "\n";
         std::cout << std::endl;
     }
+
+    name_to_id.display();
+    std::cout << std::endl;
+    inventory.display();
+    std::cout << std::endl;
 
     inventory.remove(3);
     if(inventory.get(3) != NULL){
