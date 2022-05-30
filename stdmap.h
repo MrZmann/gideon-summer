@@ -1,32 +1,36 @@
+#pragma once
+
 #include "product.h"
 #include <map>
 
-#ifndef STD_MAP
-#define STD_MAP
 
 class StringToIntMap {
+    private:
+        std::map<std::string, uint32_t> hashmap;
     public:
-    StringToIntMap() {}
+        StringToIntMap() : hashmap() {}
 
-    uint32_t get(std::string s) { return 0; }
+        uint32_t get(std::string s);
 
-    void put(std::string s, uint32_t v) {}
+        void put(std::string s, uint32_t v);
 
-    void remove(std::string s) {}
+        void remove(std::string s);
 
 };
 
 class IntToProductMap {
-    public:
-    IntToProductMap() {}
+private:
+    std::map<uint32_t, Product*> hashmap;
 
-    Product* get(uint32_t s) { return nullptr; }
+public:
+    IntToProductMap() : hashmap() {}
 
-    void put(uint32_t i, Product* p) {}
+    Product* get(uint32_t s);
 
-    void remove(uint32_t t) {}
+    void put(uint32_t i, Product* p);
+
+    void remove(uint32_t t);
 
 };
 
 
-#endif

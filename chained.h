@@ -4,7 +4,13 @@
 
 #ifndef CHAINED_MAP
 #define CHAINED_MAP
+//implement hash map using a vector of linked lists for collisions
+//use std::hash for string or any whatever w/ mod
+//std::hash for int or random math w/ mod
 
+//fill out report
+//- resizing and when to resize
+//- measuring collisions
 class StringToIntMap {
     public:
     StringToIntMap() {}
