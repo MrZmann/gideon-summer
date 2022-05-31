@@ -8,11 +8,21 @@ What are the average and worst case time complexities for each map operation?
 
 How many collisions are you getting with your chained implementaion?
 
-    My first implementation has 2 collisions in name_to_id and 0 collisions in inventory.
+    In a 3000 word test:
+    For Names:
+    4096 Lists
+    Total Collisions: 839
+    Mean Collisions: 0.204834
+    Stdev Collisions: 0.508987
+    For Products:
+    4096 Lists
+    Total Collisions: 953
+    Mean Collisions: 0.232666
+    Stdev Collisions: 0.422533
 
 How long was the longest list of collisions?
 
-    The longest length was 2 (the shortest was 0).
+    In the 3000 word test, the longest length was 5 for names and 2 for products (the shortest was 0 for both).
 
 Describe exactly what you measured and how; consider making a new test case with more insertions.
 
@@ -25,4 +35,9 @@ How can you reduce the number of collisions?
 
 Is there any code between your two implementations of stdmap.h and chained.h that can be reused or refactored?
 
-    The function name, type, and arguments can be reused, but the implementations are entirely different.
+    The hash functions cannot be reused.
+    The get function can be reused except for its default return value, which is -1 for StringToIntMap and nullptr for IntToProductMap
+    The put function can be reused except the argument names are different and the std::pair types are different ( <std::string, uint32_t> and <uint32_t, Product*> )
+    The remove function can be reused except the argument names are different
+    The doubleSize function can be reused except the std::pair types are different ( <std::string, uint32_t> and <uint32_t, Product*> )
+    The display function can be reused except the print statement for displaying the lists is slightly different (product->id instead of just product)

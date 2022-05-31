@@ -16,8 +16,14 @@ uint32_t StringToIntMap::get(std::string s) {
 
 void StringToIntMap::put(std::string s, uint32_t v) {
     uint32_t index = hash(s);
-    std::pair<std::string, uint32_t> keyValuePair(s, v);
-    hashmap[index].push_back(keyValuePair);
+    for(auto keyValuePair : hashmap[index]){
+        if(keyValuePair.first == s){
+            keyValuePair.second = v;
+            return;
+        }
+    }
+    std::pair<std::string, uint32_t> kvp(s, v);
+    hashmap[index].push_back(kvp);
     ++numPairs;
     if((static_cast<float>(numPairs))/(static_cast<float>(hashmapSize)) > MAX_LOAD_FACTOR){
         doubleSize();
@@ -31,6 +37,7 @@ void StringToIntMap::remove(std::string s) {
         if(s == i->first){
             hashmap[index].erase(i);
             --numPairs;
+            return;
         }
     }
 }
@@ -38,10 +45,10 @@ void StringToIntMap::remove(std::string s) {
 void StringToIntMap::doubleSize(){
     hashmapSize *= 2;
     std::vector<std::list<std::pair<std::string, uint32_t>>> newMap(hashmapSize);
-    for(auto x : hashmap){
-        for(auto y : x){
-            uint32_t index = hash(y.first);
-            newMap[index].push_back(y);
+    for(auto bucket : hashmap){
+        for(auto keyValuePair : bucket){
+            uint32_t index = hash(keyValuePair.first);
+            newMap[index].push_back(keyValuePair);
         }
     }
     //does this automatically free the old data?
@@ -122,8 +129,14 @@ Product* IntToProductMap::get(uint32_t s) {
 
 void IntToProductMap::put(uint32_t i, Product* p) {
     uint32_t index = hash(i);
-    std::pair<uint32_t, Product*> keyValuePair(i, p);
-    hashmap[index].push_back(keyValuePair);
+    for(auto keyValuePair : hashmap[index]){
+        if(keyValuePair.first == i){
+            keyValuePair.second = p;
+            return;
+        }
+    }
+    std::pair<uint32_t, Product*> kvp(i, p);
+    hashmap[index].push_back(kvp);
     ++numPairs;
     if((static_cast<float>(numPairs))/(static_cast<float>(hashmapSize)) > MAX_LOAD_FACTOR){
         doubleSize();
@@ -137,6 +150,7 @@ void IntToProductMap::remove(uint32_t t) {
     if(t == i->first){
             hashmap[index].erase(i);
             --numPairs;
+            return;
         }
     }
 }
@@ -144,10 +158,10 @@ void IntToProductMap::remove(uint32_t t) {
 void IntToProductMap::doubleSize(){
     hashmapSize *= 2;
     std::vector<std::list<std::pair<uint32_t , Product*>>> newMap(hashmapSize);
-    for(auto x : hashmap){
-        for(auto y : x){
-            uint32_t index = hash(y.first);
-            newMap[index].push_back(y);
+    for(auto bucket : hashmap){
+        for(auto keyValuePair : bucket){
+            uint32_t index = hash(keyValuePair.first);
+            newMap[index].push_back(keyValuePair);
         }
     }
     //does this automatically free the old data?
