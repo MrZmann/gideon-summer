@@ -9,8 +9,10 @@ add_executable(gideon_summer
         chained.h
         product.h
         #stdmap.h
-        test.cc
+        #test.cc
         #stdmap.cpp
         chained.cpp
         stats.h
-        stats.cpp)
+        stats.cpp
+        filetest.cpp
+        )
