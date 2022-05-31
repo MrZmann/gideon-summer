@@ -1,18 +1,15 @@
 #pragma once
 
 #include "product.h"
+#include "stats.h"
+#include <iostream>
 #include <list> 
 #include <vector>
+#include <algorithm>
+#include <numeric>
+#include <cmath>
 
-//implement hash map using a vector of linked lists for collisions
-//use std::hash for string or any whatever w/ mod
-//std::hash for int or random math w/ mod
-
-//fill out report
-//- resizing and when to resize
-//- measuring collisions
-
-#define hashmapSize 4
+#define MAX_LOAD_FACTOR 0.75
 
 class StringToIntMap {
 private:
@@ -22,8 +19,16 @@ private:
 
     uint32_t hash(std::string x);
 
+    uint32_t hashmapSize = 4;
+
+    uint32_t numPairs = 0;
+
+    void doubleSize();
+
 public:
-    StringToIntMap() : hashmap(hashmapSize) {}
+    StringToIntMap() : hashmap(4) {}
+
+    StringToIntMap(uint32_t s) : hashmap(s) {hashmapSize = s;}
 
     uint32_t get(std::string s);
 
@@ -32,6 +37,7 @@ public:
     void remove(std::string s);
 
     void display();
+
 };
 
 class IntToProductMap {
@@ -42,8 +48,16 @@ private:
 
     uint32_t hash(uint32_t x);
 
+    uint32_t hashmapSize = 4;
+
+    uint32_t numPairs = 0;
+
+    void doubleSize();
+
 public:
-    IntToProductMap() : hashmap(hashmapSize) {}
+    IntToProductMap() : hashmap(4) {}
+
+    IntToProductMap(uint32_t s) : hashmap(s) {hashmapSize = s;}
 
     Product* get(uint32_t s);
 

@@ -1,18 +1,28 @@
 Why doesn't the starter code compile? How did you fix it?
 
-There is an issue with include guards, because Products are being defined twice. This is fixed by adding "#pragma once" to the top of product.h
+    There is an issue with include guards, because Products are being defined twice. This is fixed by adding "#pragma once" to the top of product.h
 
 What are the average and worst case time complexities for each map operation?
 
-O(1); O(length) in the worst case
+    O(1); O(length) in the worst case
 
-How many collisions are you getting with your chained implementaion? 
+How many collisions are you getting with your chained implementaion?
+
+    My first implementation has 2 collisions in name_to_id and 0 collisions in inventory.
 
 How long was the longest list of collisions?
 
+    The longest length was 2 (the shortest was 0).
+
 Describe exactly what you measured and how; consider making a new test case with more insertions.
 
-How can you reduce the number of collisions? 
+    I measured total elements, mean elements, stdev elements, total collisions, mean collisions, stdev collisions, number of lists, number of lists with zero elements, number with 1 element, number with more than 1 element, the size of the biggest list, and the size of the smallest list.
+    These are all in the display() function.
+
+How can you reduce the number of collisions?
+
+    Expand the hashtable or change the hashing function. I will opt for expanding the hashtable if the load factor reached 0.75.
 
 Is there any code between your two implementations of stdmap.h and chained.h that can be reused or refactored?
 
+    The function name, type, and arguments can be reused, but the implementations are entirely different.
