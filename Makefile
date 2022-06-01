@@ -1,4 +1,5 @@
-std:
-	g++ test.cc stdmap.cpp -o test -DUSE_STD_MAP
-chained:
-	g++ test.cc chained.cpp stats.cpp -o test -DUSE_CHAINED_MAP
+CXX=g++
+CCFLAGS=-Wall -Werror -O3 -g -std=c++17
+
+all:
+	$(CXX) $(CCFLAGS) test.cc -o test 
