@@ -12,4 +12,7 @@ Your assignment:
     - Implement chained.h using std::vector and std::list
     - Answer questions outlined in REPORT.txt
 
+    - Implement Chained.h using templates
+    - Implement Open.h
+
 
