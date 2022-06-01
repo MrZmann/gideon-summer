@@ -25,14 +25,3 @@ class StdMap : public HashTable<Key, Value> {
         }
 
 };
-
-/*
-
-template <> 
-uint32_t StdMap<std::string, uint32_t>::get(std::string k){
-    std::cout << "I hate uint32_t's";
-    return 123;
-}
-
-*/
-
