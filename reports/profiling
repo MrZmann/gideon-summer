@@ -1,0 +1,10 @@
+Do templates or type specific implementations perform better? Write your
+hypothesis before running experiments. Why do your results look the way they
+do? Consult the internet.
+
+What types of useful information can you measure with getrusage, with perf?
+
+Which type of hash table is better, chained collisions or open addressing?
+
+Is a hash table even the right data structure at all for Amazoff's use 
+case? List some pros and cons.
