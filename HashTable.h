@@ -7,6 +7,8 @@ template<typename Key, typename Value>
 class HashTable {
 public:
         HashTable() = default;
+
+        ~HashTable() = default;
         
         virtual Value get(Key k) = 0;
 

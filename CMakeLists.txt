@@ -7,11 +7,12 @@ include_directories(.)
 
 add_executable(gideon_summer
         Chained.h
-        filetest.cc
+        benchmark.cc
         Open.h
         Product.h
         StdMap.h
         #test.cc
         stats.h
         stats.cc
+        #testing.cc
         )
