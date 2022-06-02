@@ -21,36 +21,36 @@ int verbose = 0;
 int main(int argc, char** argv){
     read_args(argc, argv);
 
-    HashTable<std::string, uint32_t>* name_to_id;
-    HashTable<uint32_t, Product*>* inventory;
+    HashTable<std::string, uint64_t>* name_to_id;
+    HashTable<uint64_t, Product*>* inventory;
     
     if(mapType == CHAINED_MAP){
-        name_to_id = new ChainedMap<std::string, uint32_t>();
-        inventory = new ChainedMap<uint32_t, Product*>();
+        name_to_id = new ChainedMap<std::string, uint64_t>();
+        inventory = new ChainedMap<uint64_t, Product*>();
 
     } else if(mapType == OPEN_MAP){
-        name_to_id = new OpenMap<std::string, uint32_t>();
-        inventory = new OpenMap<uint32_t, Product*>();
+        name_to_id = new OpenMap<std::string, uint64_t>();
+        inventory = new OpenMap<uint64_t, Product*>();
 
     } else if(mapType == STD_MAP){
-        name_to_id = new StdMap<std::string, uint32_t>();
-        inventory = new StdMap<uint32_t, Product*>();
+        name_to_id = new StdMap<std::string, uint64_t>();
+        inventory = new StdMap<uint64_t, Product*>();
     } else {
         std::cerr << "Unexpected map type\n";
         exit(1);
     }
 
     // Populate inventory
-    uint32_t NUM_PRODUCTS = 4;
+    uint64_t NUM_PRODUCTS = 4;
     std::string products[4] = {"Twix", "Snickers", "Butterfingers", "Reese's"};
-    for(uint32_t i = 0; i < NUM_PRODUCTS; i++){
+    for(uint64_t i = 0; i < NUM_PRODUCTS; i++){
         std::string name = products[i];
         name_to_id->put(name, i);
         Product* prod = new Product(i, i, i);
         inventory->put(i, prod);
     }
 
-    for(uint32_t i = 0; i < NUM_PRODUCTS; i++){
+    for(uint64_t i = 0; i < NUM_PRODUCTS; i++){
         if(i != name_to_id->get(products[i])){
             std::cerr << "Map implementation broken\n";
             exit(1);

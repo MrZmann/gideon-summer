@@ -23,5 +23,4 @@ class StdMap : public HashTable<Key, Value> {
         void remove(Key k){
             hashmap.erase(k);
         }
-
 };
