@@ -2,49 +2,56 @@
 #include "Chained.h"
 #include "Open.h"
 #include "StdMap.h"
+#include "StdUnorderedMap.h"
 
 #include <iostream>
 #include <vector>
-#include <fstream>
 #include <chrono>
+#include <unistd.h>
+
+enum MAP_TYPE {STDMAP = 0, CHAINEDMAP = 1, OPENMAP = 2, STDUNORDEREDMAP = 3};
+
+void read_args(int, char**);
+
+//command line options
+MAP_TYPE mapType = STDMAP;
+uint64_t verbose = 0;
+uint64_t mapSize = 100000;
+double load = 0.7;
 
 struct productsArr{
     std::string* products;
     uint64_t size;
 };
 
-enum MAP_TYPE {STDGRAPH = 0, CHAINEDGRAPH = 1, OPENGRAPH = 2};
-
 struct graphStat{
     graphStat(MAP_TYPE t, double l, uint64_t n) {
-        graphType = t;
+        mapType = t;
         loadFactor = l;
         numberOfItems = n;
         msToFill = -1;
         msToRead = -1;
     }
-    MAP_TYPE graphType;
+    MAP_TYPE mapType;
     double loadFactor;
     uint64_t numberOfItems;
     uint64_t msToFill;
     uint64_t msToRead;
-};
 
-void printStat(graphStat stat){
-    std::string name;
-    switch (stat.graphType){
-        case STDGRAPH:
-            name = "STD Map";
-            break;
-        case CHAINEDGRAPH:
-            name = "Chained Map";
-            break;
-        case OPENGRAPH:
-            name = "Open Map";
-            break;
+    std::string getType(){
+        switch (mapType) {
+            case STDMAP:
+                return "STD Map";
+            case CHAINEDMAP:
+                return "Chained Map";
+            case OPENMAP:
+                return "Open Map";
+            case STDUNORDEREDMAP:
+                return "STD Unordered Map";
+        }
+        return "";
     }
-    std::cout << name << " with " << std::to_string(stat.numberOfItems) << " items | LF: " << std::to_string(stat.loadFactor) << " | ms to Fill: " << std::to_string(stat.msToFill) << " | ms to Read: " << std::to_string(stat.msToRead) << "|\n";
-}
+};
 
 bool compareMsFill(graphStat a, graphStat b) {
     return a.msToFill < b.msToFill;
@@ -54,151 +61,127 @@ bool compareMsRead(graphStat a, graphStat b) {
     return a.msToRead < b.msToRead;
 }
 
-graphStat testBuildTime(const std::string* products, const uint64_t productsSize, const MAP_TYPE graphType, const double loadFactor){
-    HashTable<std::string, uint64_t>* name_to_id;
-    HashTable<uint64_t, Product*>* inventory;
+graphStat testBuildTime(const uint64_t mapSize, MAP_TYPE mapType, double loadFactor){
     auto time1 = std::chrono::high_resolution_clock::now();
     auto time2 = std::chrono::high_resolution_clock::now();
-    auto durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
-    std::string graphTypeName;
-    graphStat graphStatistics(graphType, loadFactor, productsSize);
-    switch (graphType){
-        case STDGRAPH:
-            graphTypeName = "STD Map";
-            std::cout << "Initializing STD Map (load factor is thrown away)\n";
-            name_to_id = new StdMap<std::string, uint64_t>();
-            inventory = new StdMap<uint64_t, Product*>();
-
-            for(uint64_t i = 0; i < productsSize; ++i){
-                name_to_id->put(products[i], i);
-                auto prod = new Product(i, i, i);
-                inventory->put(i, prod);
-            }
-
-            time2 = std::chrono::high_resolution_clock::now();
-            durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
-            std::cout << "Time to fill STD Map: " << durMs.count() << " milliseconds" << std::endl;
-            graphStatistics.msToFill = durMs.count();
+    HashTable<uint64_t, uint64_t>* map;
+    switch(mapType){
+        case CHAINEDMAP:
+            map = new ChainedMap<uint64_t, uint64_t>(loadFactor);
             break;
-        case CHAINEDGRAPH:
-            graphTypeName = "Chained Map";
-            std::cout << "Initializing Chain Map with a load factor of " << loadFactor << "\n";
-            name_to_id = new ChainedMap<std::string, uint64_t>(loadFactor);
-            inventory = new ChainedMap<uint64_t, Product*>(loadFactor);
-
-            for(uint64_t i = 0; i < productsSize; ++i){
-                name_to_id->put(products[i], i);
-                auto prod = new Product(i, i, i);
-                inventory->put(i, prod);
-            }
-
-            time2 = std::chrono::high_resolution_clock::now();
-            durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
-            std::cout << "Time to fill Chained Map with a load factor of "<< loadFactor << ": " << durMs.count() << " milliseconds" << std::endl;
-            graphStatistics.msToFill = durMs.count();
+        case OPENMAP:
+            map = new OpenMap<uint64_t, uint64_t>(loadFactor);
             break;
-        case OPENGRAPH:
-            graphTypeName = "Open Map";
-            if(loadFactor <= 0 || loadFactor >= 1){
-                std::cerr << "Invalid load factor for OpenGraph";
-                exit(1);
-            }
-            std::cout << "Initializing Open Map with a load factor of " << loadFactor << "\n";
-            name_to_id = new OpenMap<std::string, uint64_t>(loadFactor);
-            inventory = new OpenMap<uint64_t, Product*>(loadFactor);
-
-            for(uint64_t i = 0; i < productsSize; ++i){
-                name_to_id->put(products[i], i);
-                auto prod = new Product(i, i, i);
-                inventory->put(i, prod);
-            }
-
-            time2 = std::chrono::high_resolution_clock::now();
-            durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
-            std::cout << "Time for Open Map with a load factor of "<< loadFactor << ": " << durMs.count() << " milliseconds" << std::endl;
-            graphStatistics.msToFill = durMs.count();
+        case STDMAP:
+            map = new StdMap<uint64_t, uint64_t>;
+            break;
+        case STDUNORDEREDMAP:
+            map = new StdUnorderedMap<uint64_t, uint64_t>;
             break;
         default:
-            std::cerr << "Invalid graph type\n";
+            std::cerr << "Unexpected map type\n";
             exit(1);
     }
+    graphStat graphStatistics(mapType, loadFactor, mapSize);
+
+    if(verbose >= 1) {
+        std::cout << "Initializing " << graphStatistics.getType() << " with a load factor of " << loadFactor << "\n";
+    }
+    //populate map
+    for(uint64_t i = 0; i < mapSize; ++i){
+        map->put(i, (i+1)*(i+3));
+    }
+
+    time2 = std::chrono::high_resolution_clock::now();
+    auto durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
+    if(verbose >= 1) {
+        std::cout << "Time to fill " << graphStatistics.getType() << " with a load factor of " << loadFactor << ": "
+                  << durMs.count() << " milliseconds" << std::endl;
+    }
+    graphStatistics.msToFill = durMs.count();
+
     //testing map getting
     time1 = std::chrono::high_resolution_clock::now();
-    for(uint64_t i = 0; i < productsSize; i++) {
-        if (i != name_to_id->get(products[i])) {
+    for(uint64_t i = 0; i < mapSize; i++) {
+        if ((i+1)*(i+3) != map->get(i)) {
             std::cerr << "Map implementation broken\n";
             exit(1);
         }
     }
     time2 = std::chrono::high_resolution_clock::now();
     durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
-    std::cout << "Time to get every item in " << graphTypeName << ": " << durMs.count() << " milliseconds\n" << std::endl;
+    if(verbose >= 1) {
+        std::cout << "Time to get every item in " << graphStatistics.getType() << ": " << durMs.count()
+                  << " milliseconds\n" << std::endl;
+    }
     graphStatistics.msToRead = durMs.count();
-    //are the destructors of name_to_id and inventory automatically called because they existed only in this function?
-    delete name_to_id;
-    delete inventory;
+
+    delete map;
     return graphStatistics;
 }
 
-productsArr init(std::string filePath){
-    auto start = std::chrono::high_resolution_clock::now();
-    // Populate inventory
-    std::ifstream read(filePath);
-    productsArr productsArray;
-    if(read.is_open()){
-        read >> productsArray.size;
-        productsArray.products = new std::string[productsArray.size];
-        for(uint64_t i = 0; i < productsArray.size; ++i){
-            read >> productsArray.products[i];
-        }
-    }
-    else{
-        std::cerr << "Unable to read from file\n";
-        exit(1);
-    }
-    read.close();
+int main(int32_t argc, char** argv){
+    read_args(argc, argv);
+    //also compare against unordered map
 
-    auto finishedReading = std::chrono::high_resolution_clock::now();
-    auto durMs = std::chrono::duration_cast<std::chrono::milliseconds>(finishedReading-start);
-    std::cout << "Time to read from file: " << durMs.count() << " milliseconds\n" << std::endl;
-    return productsArray;
+    graphStat stat = testBuildTime(mapSize, mapType, load);
+    std::cout << stat.getType() << "," << std::to_string(stat.numberOfItems) << "," << std::to_string(stat.loadFactor) << "," << std::to_string(stat.msToFill) << "," << std::to_string(stat.msToRead) << ",\n";
 }
 
-int main(){
-    productsArr prods = init("../in.txt");
-
-    std::vector<graphStat> stats;
-    stats.push_back(testBuildTime(prods.products, prods.size, STDGRAPH, -1.0));
-    stats.push_back(testBuildTime(prods.products, prods.size, CHAINEDGRAPH, 0.75));
-    stats.push_back(testBuildTime(prods.products, prods.size, CHAINEDGRAPH, 2));
-    stats.push_back(testBuildTime(prods.products, prods.size, CHAINEDGRAPH, 5));
-    stats.push_back(testBuildTime(prods.products, prods.size, CHAINEDGRAPH, 10));
-    stats.push_back(testBuildTime(prods.products, prods.size, CHAINEDGRAPH, 15));
-    stats.push_back(testBuildTime(prods.products, prods.size, OPENGRAPH, 0.3));
-    stats.push_back(testBuildTime(prods.products, prods.size, OPENGRAPH, 0.5));
-    stats.push_back(testBuildTime(prods.products, prods.size, OPENGRAPH, 0.7));
-
-    std::string name;
-    std::cout << "Default Order:\n";
-    for(auto stat : stats){
-        printStat(stat);
+void read_args(int32_t argc, char** argv){
+    int32_t opt;
+    //why is there no colon between h and v?
+    while((opt = getopt(argc, argv, ":m:s:l:hv")) != -1)
+    {
+        switch(opt)
+        {
+            case 'v':
+                verbose = 1;
+                break;
+            case 'h':
+                std::cout << "Usage: test [arguments]\n";
+                std::cout << "\t-m:\tmapType: std (default), stdunordered, chained, or open\n";
+                std::cout << "\t-s:\tmapSize: any uint64_t (default 100,000)\n";
+                std::cout << "\t-l:\tLoadFactor: any double (default 0.7) (0..1 for OPENMAP) (discarded for STDMAP and STDUNORDEREDMAP)\n";
+                std::cout << "\t-v:\tverbose: 1 to enable (default 0)\n";
+                exit(0);
+            case 'm':
+                if(strcmp("chained", optarg) == 0){
+                    mapType = CHAINEDMAP;
+                } else if(strcmp("std", optarg) == 0){
+                    mapType = STDMAP;
+                } else if(strcmp("open", optarg) == 0){
+                    mapType = OPENMAP;
+                } else if (strcmp("stdunordered", optarg) == 0){
+                    mapType = STDUNORDEREDMAP;
+                } else {
+                    std::cerr << "Unexpected map type!\n";
+                    exit(1);
+                }
+                break;
+            case 's':
+                //try-catch?
+                mapSize = atol(optarg);
+                break;
+            case 'l':
+                //try-catch?
+                load = atof(optarg);
+                break;
+            default:
+                printf("unknown option: %c\n", optopt);
+                break;
+        }
     }
-    std::cout << std::endl;
 
-    std::cout << "Sorted by Time to Fill:\n";
-    std::sort(stats.begin(), stats.end(), compareMsFill);
-    for(auto stat : stats){
-        printStat(stat);
+    if(verbose){
+        std::cout << "Map type: ";
+        if(mapType == STDMAP)
+            std::cout << "STDMAP\n";
+        else if(mapType == CHAINEDMAP)
+            std::cout << "CHAINEDMAP\n";
+        else if(mapType == OPENMAP)
+            std::cout << "OPENMAP\n";
+        else if(mapType == STDUNORDEREDMAP)
+            std::cout << "STDUNORDEREDMAP\n";
     }
-    std::cout << std::endl;
-
-    std::cout << "Sorted by Time to Read:\n";
-    std::sort(stats.begin(), stats.end(), compareMsRead);
-    for(auto stat : stats){
-        printStat(stat);
-    }
-    std::cout << std::endl;
-
-
-    delete prods.products;
 }

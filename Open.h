@@ -30,7 +30,7 @@ private:
 
     //this is the operation done on any index that collides
     uint64_t iterate(uint64_t index){
-        return index+1;
+        return index*index;
     }
 
     std::vector<KeyValuePair>* hashmap;
@@ -87,9 +87,15 @@ public:
     }
 
     OpenMap(double load) {
+        if(load <= 0 || load >= 1){
+            std::cerr << "Invalid load factor for OpenGraph (not 0..1) - setting to 0.7";
+            MAX_LOAD_FACTOR = 0.7;
+        }
+        else{
+            MAX_LOAD_FACTOR = load;
+        }
         hashmap =  new std::vector<KeyValuePair>(hashmapSize);
         significancemap = new std::vector<bool>(hashmapSize, false);
-        MAX_LOAD_FACTOR = load;
     }
 
     ~OpenMap(){
@@ -99,11 +105,15 @@ public:
 
     Value get(Key k) {
         uint64_t index = hash(k);
+        uint64_t origIndex = index;
         while((*significancemap)[index%hashmapSize]){
             if((*hashmap)[index%hashmapSize].valid && k == (*hashmap)[index%hashmapSize].key){
                 return (*hashmap)[index%hashmapSize].value;
             }
             index = iterate(index);
+            if(index%hashmapSize == origIndex%hashmapSize){
+                break;
+            }
         }
         return defaultGetReturn();
     }
@@ -144,7 +154,7 @@ public:
 
     void display(bool print){
         uint64_t numElements = 0;
-        for(int i = 0; i < hashmapSize; ++i){
+        for(uint64_t i = 0; i < hashmapSize; ++i){
             if((*hashmap)[i].valid) {
                 if(print) {
                     std::cout << i << ": {" << (((*significancemap)[i]) ? "T" : "F") << "} |" << hash((*hashmap)[i].key) << "| ";
@@ -162,7 +172,6 @@ public:
         std::cout << "Total Elements: "<< numElements << "\n";
         std::cout << "Map Size: " << hashmapSize << "\n";
         std::cout << "Load Factor: " << (static_cast<float>(numSignificant))/(static_cast<float>(hashmapSize)) << "\n";
-        //# probes
         std::cout << std::endl;
     }
 };

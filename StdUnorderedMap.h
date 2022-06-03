@@ -3,17 +3,17 @@
 #include "HashTable.h"
 #include "Product.h"
 #include <iostream>
-#include <map>
+#include <unordered_map>
 
 template<typename Key, typename Value>
-class StdMap : public HashTable<Key, Value> {
+class StdUnorderedMap : public HashTable<Key, Value> {
 private:
-    std::map<Key, Value> hashmap;
+    std::unordered_map<Key, Value> hashmap;
 public:
-    StdMap() : hashmap() {}
+    StdUnorderedMap() : hashmap() {}
 
-    StdMap(double load) : hashmap() {
-        std::cerr << "Ignoring load vector for STD Map\n";
+    StdUnorderedMap(double load) : hashmap() {
+        std::cerr << "Ignoring load vector for STD Unordered Map\n";
     }
 
     Value get(Key k) {
@@ -34,6 +34,6 @@ public:
                 std::cout << " <" << kvp.first << ", " << kvp.second << "> \n";
             }
         }
-        std::cout << "Unable to generate stats for STD Map" << std::endl;
+        std::cout << "Unable to generate stats for STD Unordered Map" << std::endl;
     }
 };

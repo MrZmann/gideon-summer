@@ -15,4 +15,5 @@ add_executable(gideon_summer
         stats.h
         stats.cc
         #testing.cc
+        StdUnorderedMap.h
         )
