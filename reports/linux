@@ -1,0 +1,33 @@
+Stop!
+If you aren't using vim already, you should try it out for this assignment. Try vimtutor if you don't get THE controls.
+Also, you should be completing this report on your Linux machine if you aren't using it already.
+
+First, replace every instance of capital "THE" with "the" - you can use vim or sed. List THE command you used below.
+
+For each of THE following exercises, list your answer along with your single-line shell command for finding THE solution.
+Try to use man pages before consulting the internet.
+
+    What's your current directory?
+
+    What's THE PID of your shell?
+
+    How many times does THE string "THE " appear in THE gideon-summer directory and all files within
+
+    How many times does THE string "THE " appear directly in THE gideon-summer directory if you ignore case 
+
+    Which file (oTHEr than this) contains a line which has "THE " and THEn later in THE line has "compile"
+    
+    How many lines in THE entire gideon-summer directory contain eiTHEr THE word "competitor" or "permitted"
+
+    How many characters are in THE last three lines of README.md?
+    
+    How many .cc files are in THE gideon-summer directory? Don't use ls or grep!
+
+    How much space is available on THE "/" mount?
+
+    How many elements are THEre in your PATH environment variable?
+
+
+What do the different permissions bits mean for regular files? For directories?
+
+What are the tradeoffs between soft and hard links?
