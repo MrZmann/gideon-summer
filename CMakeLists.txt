@@ -6,13 +6,15 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(.)
 
 add_executable(gideon_summer
-        chained.h
-        product.h
-        #stdmap.h
+        Chained.h
+        benchmark.cc
+        Open.h
+        Product.h
+        StdMap.h
         #test.cc
-        #stdmap.cpp
-        chained.cpp
         stats.h
-        stats.cpp
-        filetest.cpp
+        #testing.cc
+        StdUnorderedMap.h
+        murmur3.c
+        murmur3.h
         )

@@ -3,17 +3,17 @@
 #include "HashTable.h"
 #include "Product.h"
 #include <iostream>
-#include <map>
+#include <unordered_map>
 
 template<typename Key, typename Value>
-class StdMap : public HashTable<Key, Value> {
+class StdUnorderedMap : public HashTable<Key, Value> {
 private:
-    std::map<Key, Value> hashmap_;
+    std::unordered_map<Key, Value> hashmap_;
 public:
-    StdMap() : hashmap_() {}
+    StdUnorderedMap() : hashmap_() {}
 
-    StdMap(double load) : hashmap_() {
-        std::cerr << "Ignoring load vector for STD Map\n";
+    StdUnorderedMap(double load) : hashmap_() {
+        std::cerr << "Ignoring load vector for STD Unordered Map\n";
     }
 
     Value get(Key k) override {
@@ -29,9 +29,9 @@ public:
     }
 
     void display() override {
-            for (auto kvp: hashmap_) {
-                std::cout << " <" << kvp.first << ", " << kvp.second << "> \n";
-            }
+        for (auto kvp: hashmap_) {
+            std::cout << " <" << kvp.first << ", " << kvp.second << "> \n";
+        }
     }
 
     uint64_t getNumPairs() override {
