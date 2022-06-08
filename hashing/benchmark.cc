@@ -84,7 +84,6 @@ std::string rUsageToCSV(rusage stat){
     return csv;
 }
 
-
 //Graph Type,Number of Items,Max Load Factor,Final Load Factor,ms to Fill,ms to Read,
 std::string graphStat::toCSV() {
     std::string csv;
