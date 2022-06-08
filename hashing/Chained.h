@@ -85,51 +85,67 @@ public:
 
     void stats() override {
         std::vector<uint64_t> elements;
-        std::vector<uint64_t> collisions;
         uint64_t numWith0 = 0;
         uint64_t numWith1 = 0;
         uint64_t numWithMore = 0;
 
         for(uint64_t i = 0; i < hashmap_.size(); i++){
+            //size_t to uint64_t
             elements.push_back(static_cast<uint64_t>(hashmap_[i].size()));
-            if(hashmap_[i].empty()) {
-                ++numWith0;
-                collisions.push_back(0);
-            } else {
-                collisions.push_back(static_cast<uint64_t>(hashmap_[i].size()-1));
-                if(hashmap_[i].size() == 1){
+            switch(hashmap_[i].size()){
+                case 0:
+                    ++numWith0;
+                    break;
+                case 1:
                     ++numWith1;
-                }
-                else{
+                    break;
+                default:
                     ++numWithMore;
-                }
             }
         }
         std::cout << std::endl;
 
+        //there are two layers here so an empty elements vector doesn't get sorted
         if(elements.empty()){
             std::cout << "No Elements\n";
         } else {
             std::sort(elements.begin(), elements.end());
-            Statistic elementStats = evaluateStats(&elements);
-            std::cout << "Total Elements: " << elementStats.total << "\n";
-            std::cout << "Mean Elements: " << elementStats.mean << "\n";
-            std::cout << "Stdev Elements: " << elementStats.stdev << "\n";
+            //if the biggest list is size 0 then all the lists are size 0 and there are no elements
+            if (elements[elements.size()-1] == 0){
+                std::cout << "No Elements\n";
+            } else {
+                Statistic elementStats = evaluateStats(&elements);
+                std::cout << "Total Elements: " << elementStats.total << "\n";
+                std::cout << "Mean Elements: " << elementStats.mean << "\n";
+                std::cout << "Stdev Elements: " << elementStats.stdev << "\n";
 
-            std::sort(collisions.begin(), collisions.end());
-            Statistic collisionStats = evaluateStats(&collisions);
-            std::cout << "Total Collisions: " << collisionStats.total << "\n";
-            std::cout << "Mean Collisions: " << collisionStats.mean << "\n";
-            std::cout << "Stdev Collisions: " << collisionStats.stdev << "\n";
+                //save the size of the biggest and smallest list to print later
+                uint64_t maxElement = elements[elements.size() - 1];
+                uint64_t minElement = elements[0];
+                //switch from measuring elements to measuring collisions
+                for (uint64_t &num: elements) {
+                    if (num != 0) {
+                        --num;
+                    }
+                }
 
-            std::cout << "Total Number of Lists: " << hashmap_.size() << "\n";
-            std::cout << "Number of Lists With Zero Elements: " << numWith0 << "\n";
-            std::cout << "Number of Lists with One Element: " << numWith1 << "\n";
-            std::cout << "Number of Lists with more than One Element: " << numWithMore << "\n";
-            //Histogram?
+                if (elements[elements.size() - 1] == 0) {
+                    std::cout << "No Collisions\n";
+                } else {
+                    Statistic collisionStats = evaluateStats(&elements);
+                    std::cout << "Total Collisions: " << collisionStats.total << "\n";
+                    std::cout << "Mean Collisions: " << collisionStats.mean << "\n";
+                    std::cout << "Stdev Collisions: " << collisionStats.stdev << "\n";
+                }
+                std::cout << "Total Number of Lists: " << hashmap_.size() << "\n";
+                std::cout << "Number of Lists With Zero Elements: " << numWith0 << "\n";
+                std::cout << "Number of Lists with One Element: " << numWith1 << "\n";
+                std::cout << "Number of Lists with more than One Element: " << numWithMore << "\n";
+                //Histogram?
 
-            std::cout << "Number of elements in the biggest List: " << elements[elements.size()-1] << "\n";
-            std::cout << "Number of elements in the smallest List: " << elements[0] << "\n";
+                std::cout << "Number of elements in the biggest List: " << maxElement << "\n";
+                std::cout << "Number of elements in the smallest List: " << minElement << "\n";
+            }
         }
         std::cout << std::endl;
     }
