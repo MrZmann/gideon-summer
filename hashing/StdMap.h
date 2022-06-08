@@ -16,7 +16,7 @@ public:
         std::cerr << "Ignoring load vector for STD Map\n";
     }
 
-    Value get(Key k) override {
+    Value get(const Key& k) override {
         return hashmap_[k];
     }
 
@@ -24,7 +24,7 @@ public:
         hashmap_[k] = v;
     }
 
-    void remove(Key k) override {
+    void remove(const Key& k) override {
         hashmap_.erase(k);
     }
 

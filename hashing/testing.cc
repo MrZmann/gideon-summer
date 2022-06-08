@@ -11,8 +11,8 @@
 
 
 int main() {
-    OpenMap<std::string, uint64_t> *name_to_id = new OpenMap<std::string, uint64_t>();
-    OpenMap<uint64_t, Product *> *inventory = new OpenMap<uint64_t, Product *>();
+    ChainedMap<std::string, uint64_t> *name_to_id = new ChainedMap<std::string, uint64_t>();
+    ChainedMap<uint64_t, Product *> *inventory = new ChainedMap<uint64_t, Product *>();
 
     // Populate inventory
     uint64_t NUM_PRODUCTS = 4;
@@ -73,4 +73,11 @@ int main() {
     std::cout << std::endl;
     inventory->display();
     std::cout << std::endl;
+
+    name_to_id->put("Butterfingers", 5);
+
+
+    name_to_id->display();
+    std::cout << std::endl;
+
 }

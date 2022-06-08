@@ -19,6 +19,7 @@ template<typename Key, typename Value>
 class ChainedMap : public HashTable<Key, Value> {
 public:
     ChainedMap() {
+        //hashmap_ is a vector of lists of KeyValuePairs (key, value)
         hashmap_.resize(DEFAULT_CHAINED_MAP_SIZE);
     }
 
@@ -27,24 +28,28 @@ public:
         MAX_LOAD_FACTOR_ = load;
     }
 
-    Value get(Key k) override {
+    Value get(const Key& k) override {
         uint64_t index = hash(k, hashmap_.size());
-        for(auto kvp : hashmap_[index]){
+        //if any key in the list at the index of the hashed key matches the key, return its value
+        for(const auto& kvp : hashmap_[index]){
             if(k == kvp.key_){
                 return kvp.value_;
             }
         }
+        //otherwise return the default value
         return Value{};
     }
 
     void put(Key k, Value v) override {
         uint64_t index = hash(k, hashmap_.size());
-        for(auto kvp : hashmap_[index]){
+        //if any key in the list at the index of the hashed key matches the key, change its value
+        for(auto& kvp : hashmap_[index]){
             if(kvp.key_ == k){
                 kvp.value_ = v;
                 return;
             }
         }
+        //otherwise push the KeyValuePair to the back of the list at the index of the hashed key
         KeyValuePair kvp(k, v);
         hashmap_[index].push_back(kvp);
         ++numPairs_;
@@ -53,8 +58,9 @@ public:
         }
     }
 
-    void remove(Key k) override {
+    void remove(const Key& k) override {
         uint64_t index = hash(k, hashmap_.size());
+        //iterate through every spot in the list at the index of the hashed key, and if the keys match, erase the KeyValuePair
         for(auto i = hashmap_[index].begin(); i != hashmap_[index].end(); ++i) {
             if(k == i->key_){
                 hashmap_[index].erase(i);
@@ -66,9 +72,10 @@ public:
     }
 
     void display() override {
+        //index: |number of elements| <key1, value1> <key2, value2> ...
         for(uint64_t i = 0; i < hashmap_.size(); i++){
             std::cout << i << ": |" << hashmap_[i].size() << "| ";
-            for(auto kvp : hashmap_[i]){
+            for(const auto& kvp : hashmap_[i]){
                     printKeyValuePair(kvp);
             }
                 std::cout << "\n";
@@ -156,12 +163,14 @@ private:
 
     std::hash<Key> hasher_;
 
+    //individual pairs of types may have custom hash functions
     uint64_t hash(Key k, uint64_t m){
         return hasher_(k) % m;
     }
 
     void doubleSize(){
         std::vector<std::list<KeyValuePair>> newMap(hashmap_.size() * 2);
+        //for every KeyValuePair in the old map, add it to the new map
         for(const auto& bucket : hashmap_){
             for(const auto& kvp : bucket){
                 uint64_t index = hash(kvp.key_, hashmap_.size() * 2);
@@ -170,7 +179,7 @@ private:
         }
         hashmap_ = newMap;
     }
-
+    //individual pairs of types may have custom print functions
     void printKeyValuePair(KeyValuePair kvp){
         std::cout << " Invalid types for printing ";
     }
@@ -178,17 +187,17 @@ private:
 };
 
 template<>
-uint64_t ChainedMap<uint64_t, Product*>::hash(uint64_t k, uint64_t m) {
+uint64_t ChainedMap<uint64_t, Product*>::hash(uint64_t key, uint64_t mod) {
     uint64_t out[2];
-    MurmurHash3_x64_128(&k, sizeof(k), 123, out);
-    return out[1] % m;
+    MurmurHash3_x64_128(&key, sizeof(key), 123, out);
+    return out[1] % mod;
 }
 
 template<>
-uint64_t ChainedMap<uint64_t, uint64_t>::hash(uint64_t k, uint64_t m) {
+uint64_t ChainedMap<uint64_t, uint64_t>::hash(uint64_t key, uint64_t mod) {
     uint64_t out[2];
-    MurmurHash3_x64_128(&k, sizeof(k), 123, out);
-    return out[1] % m;
+    MurmurHash3_x64_128(&key, sizeof(key), 123, out);
+    return out[1] % mod;
 }
 
 template<>
