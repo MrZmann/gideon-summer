@@ -74,6 +74,7 @@ std::string graphStat::getType() {
     return "";
 }
 
+
 std::string rUsageToCSV(rusage stat){
     std::string csv;
     csv += std::to_string((stat.ru_stime.tv_sec * 1000ULL) + (stat.ru_stime.tv_usec / 1000ULL));
@@ -82,6 +83,7 @@ std::string rUsageToCSV(rusage stat){
     csv+= ",";
     return csv;
 }
+
 
 //Graph Type,Number of Items,Max Load Factor,Final Load Factor,ms to Fill,ms to Read,
 std::string graphStat::toCSV() {
@@ -130,6 +132,7 @@ graphStat testBuildTime(uint64_t mapSize, MAP_TYPE mapType, double maxLoadFactor
     //start clock for filling map
     auto time1 = std::chrono::high_resolution_clock::now();
 
+
     //populate map first 1/2
     for(uint64_t i = 0; i < mapSize/2; ++i){
         //this overflows around i = 4.29 billion, but that shouldn't cause any problems as the value will just wrap back to 0
@@ -147,6 +150,7 @@ graphStat testBuildTime(uint64_t mapSize, MAP_TYPE mapType, double maxLoadFactor
     //start clock for getting every item in the map
     time1 = std::chrono::high_resolution_clock::now();
     //test getting every item in the map
+
     srand (time(NULL));
     for(uint64_t i = 0; i < (5*mapSize); i++){
     	uint64_t j = rand()%(mapSize/2);
