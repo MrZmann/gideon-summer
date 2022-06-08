@@ -8,32 +8,33 @@
 template<typename Key, typename Value>
 class StdUnorderedMap : public HashTable<Key, Value> {
 private:
-    std::unordered_map<Key, Value> hashmap;
+    std::unordered_map<Key, Value> hashmap_;
 public:
-    StdUnorderedMap() : hashmap() {}
+    StdUnorderedMap() : hashmap_() {}
 
-    StdUnorderedMap(double load) : hashmap() {
+    StdUnorderedMap(double load) : hashmap_() {
         std::cerr << "Ignoring load vector for STD Unordered Map\n";
     }
 
-    Value get(Key k) {
-        return hashmap[k];
+    Value get(Key k) override {
+        return hashmap_[k];
     }
 
-    void put(Key k, Value v){
-        hashmap[k] = v;
+    void put(Key k, Value v) override {
+        hashmap_[k] = v;
     }
 
-    void remove(Key k){
-        hashmap.erase(k);
+    void remove(Key k) override {
+        hashmap_.erase(k);
     }
 
-    void display(bool showRawData){
-        if(showRawData) {
-            for (auto kvp: hashmap) {
-                std::cout << " <" << kvp.first << ", " << kvp.second << "> \n";
-            }
+    void display() override {
+        for (auto kvp: hashmap_) {
+            std::cout << " <" << kvp.first << ", " << kvp.second << "> \n";
         }
-        std::cout << "Unable to generate stats for STD Unordered Map" << std::endl;
+    }
+
+    uint64_t getNumPairs() override {
+        return hashmap_.size();
     }
 };

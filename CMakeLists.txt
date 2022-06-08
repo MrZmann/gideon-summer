@@ -13,7 +13,8 @@ add_executable(gideon_summer
         StdMap.h
         #test.cc
         stats.h
-        stats.cc
         #testing.cc
         StdUnorderedMap.h
+        murmur3.c
+        murmur3.h
         )

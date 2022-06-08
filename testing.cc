@@ -35,23 +35,23 @@ int main() {
         std::cout << "\tPrice: " << prod->price << "\n";
         std::cout << std::endl;
     }
-    name_to_id->display(true);
+    name_to_id->display();
     std::cout << std::endl;
-    //inventory->display(true);
-    //std::cout << std::endl;
+    inventory->display();
+    std::cout << std::endl;
 
     name_to_id->remove("Twix");
     name_to_id->remove("Reese's");
 
-    if (name_to_id->get("Twix") != -1) {
+    if (name_to_id->get("Twix") != 0) {
         std::cerr << "Remove failed\n";
         exit(1);
 
     }
-    name_to_id->display(true);
+    name_to_id->display();
     std::cout << std::endl;
-    //inventory->display(true);
-    //std::cout << std::endl;
+    inventory->display();
+    std::cout << std::endl;
 
     name_to_id->put("Reese's", 3);
     name_to_id->put("Twix", 0);
@@ -69,8 +69,8 @@ int main() {
     }
 
 
-    name_to_id->display(true);
+    name_to_id->display();
     std::cout << std::endl;
-    //inventory->display(true);
-   // std::cout << std::endl;
+    inventory->display();
+    std::cout << std::endl;
 }

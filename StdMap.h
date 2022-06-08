@@ -8,32 +8,33 @@
 template<typename Key, typename Value>
 class StdMap : public HashTable<Key, Value> {
 private:
-    std::map<Key, Value> hashmap;
+    std::map<Key, Value> hashmap_;
 public:
-    StdMap() : hashmap() {}
+    StdMap() : hashmap_() {}
 
-    StdMap(double load) : hashmap() {
+    StdMap(double load) : hashmap_() {
         std::cerr << "Ignoring load vector for STD Map\n";
     }
 
-    Value get(Key k) {
-        return hashmap[k];
+    Value get(Key k) override {
+        return hashmap_[k];
     }
 
-    void put(Key k, Value v){
-        hashmap[k] = v;
+    void put(Key k, Value v) override {
+        hashmap_[k] = v;
     }
 
-    void remove(Key k){
-        hashmap.erase(k);
+    void remove(Key k) override {
+        hashmap_.erase(k);
     }
 
-    void display(bool showRawData){
-        if(showRawData) {
-            for (auto kvp: hashmap) {
+    void display() override {
+            for (auto kvp: hashmap_) {
                 std::cout << " <" << kvp.first << ", " << kvp.second << "> \n";
             }
-        }
-        std::cout << "Unable to generate stats for STD Map" << std::endl;
+    }
+
+    uint64_t getNumPairs() override {
+        return hashmap_.size();
     }
 };
