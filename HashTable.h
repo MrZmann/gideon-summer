@@ -15,11 +15,11 @@ public:
 
         virtual ~HashTable() = default;
         
-        virtual Value get(Key k) = 0;
+        virtual Value get(const Key& k) = 0;
 
         virtual void put(Key k, Value v) = 0;
 
-        virtual void remove(Key k) = 0;
+        virtual void remove(const Key& k) = 0;
 
         virtual void display() = 0;
 
