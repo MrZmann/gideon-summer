@@ -6,11 +6,15 @@ do? Consult the internet.
 
 What types of useful information can you measure with getrusage, with perf?
 
+getrusage:
+user time,system time,page faults without IO,context switches voulentary,context switches invoulentary,max set size
 
+perf:
+cpu-cycles,instructions,cache-references,cache-misses,branch-instructions,branch-misses,bus-cycles,L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores,LLC-loads,LLC-load-misses,LLC-stores,LLC-store-misses,dTLB-load-misses,dTLB-store-misses,iTLB-load-misses,branch-loads,branch-load-misses
 
 Which type of hash table is better, chained collisions or open addressing?
 
-
+open addressing is generally faster but takes up more memory. Specifics are in the report.
 
 Is a hash table even the right data structure at all for Amazoff's use 
 case? List some pros and cons.
