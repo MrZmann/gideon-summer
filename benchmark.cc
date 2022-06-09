@@ -1,4 +1,3 @@
-#include "Product.h"
 #include "Chained.h"
 #include "Open.h"
 #include "StdMap.h"
@@ -8,6 +7,9 @@
 #include <vector>
 #include <chrono>
 #include <unistd.h>
+#include <cstring>
+#include <sys/time.h>
+#include <sys/resource.h>
 
 enum MAP_TYPE {STDMAP = 0, CHAINEDMAP = 1, OPENMAP = 2, STDUNORDEREDMAP = 3};
 
@@ -39,6 +41,8 @@ struct graphStat{
 //It will record the time to fill, time to read, and some statistics about the graph's final position and system resource consumption.
 graphStat testBuildTime(uint64_t mapSize, MAP_TYPE mapType, double maxLoadFactor);
 
+std::string rUsageToCSV(rusage stat);
+
 int main(int32_t argc, char** argv){
     //command line options:
     //-m: mapType: std (default), stdunordered, chained, or open
@@ -47,7 +51,13 @@ int main(int32_t argc, char** argv){
     //-v: verbose: default 0, 1 to enable, 2 to enable and print graph
     read_args(argc, argv);
     graphStat stat = testBuildTime(mapSize_, mapType_, maxLoadFactor_);
-    std::cout << stat.toCSV() << std::endl;
+    rusage machineStats;
+    if(getrusage(RUSAGE_SELF, &machineStats) != 0){
+        std::cerr << "getrusage failed";
+        exit(1);
+    }
+
+    std::cout << stat.toCSV() << rUsageToCSV(machineStats) << std::endl;
 }
 
 std::string graphStat::getType() {
@@ -62,6 +72,23 @@ std::string graphStat::getType() {
             return "STD Unordered Map";
     }
     return "";
+}
+
+std::string rUsageToCSV(rusage stat){
+    std::string csv;
+    csv += std::to_string((stat.ru_utime.tv_sec * 1000ULL) + (stat.ru_utime.tv_usec / 1000ULL));
+    csv+= ",";
+    csv += std::to_string((stat.ru_stime.tv_sec * 1000ULL) + (stat.ru_stime.tv_usec / 1000ULL));
+    csv+= ",";
+    csv += std::to_string(stat.ru_minflt);
+    csv+= ",";
+    csv += std::to_string(stat.ru_nvcsw);
+    csv+= ",";
+    csv += std::to_string(stat.ru_nivcsw);
+    csv+= ",";
+    csv += std::to_string(stat.ru_maxrss);
+    csv+= ",";
+    return csv;
 }
 
 //Graph Type,Number of Items,Max Load Factor,Final Load Factor,ms to Fill,ms to Read,

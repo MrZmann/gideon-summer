@@ -28,7 +28,9 @@ public:
         }
 
         virtual double getLoadFactor(){
-            std::cerr << "Unable to get Load Factor for this graph type\n";
+            //this is commented out because the python script for benchmarking calls it on standard maps and it messes with output
+            //stderr needs to be read because perf writes to sterr
+            //std::cerr << "Unable to get Load Factor for this graph type\n";
             return -1;
         }
 
