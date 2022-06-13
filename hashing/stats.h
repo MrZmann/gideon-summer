@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cmath>
 #include <iostream>
 #include <list>
 #include <vector>
