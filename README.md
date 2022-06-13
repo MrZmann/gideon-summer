@@ -38,6 +38,7 @@ for housing the majority of their data. Amazoff developers know the C++ API is
 rather inconvenient, so they only ask for you to implement one small component.
 
 Your assignment:
+
     - Implement UserTable.h in db
     - Answer questions in reports/db
 
