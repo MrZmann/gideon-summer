@@ -30,6 +30,7 @@ Your assignment:
     - Graph interesting results and write a short report in LaTeX for the 
       Amazoff development team
 
+
 Part 3:
 With the help of your report, Amazoff developers have been able to find use
 cases for each of your hash table implementations. However, given the growing
