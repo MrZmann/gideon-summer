@@ -8,3 +8,4 @@ bench:
 	$(CXX) $(CCFLAGS) benchmark.cc $(CRITICAL) -o bench
 benchclean:
 	$(CXX) $(CCFLAGS) benchmarkClean.cc $(CRITICAL) -o benchclean
+
