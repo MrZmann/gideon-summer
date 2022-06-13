@@ -1,0 +1,10 @@
+What was your initialization command for the database? Explain each keyword.
+
+Why shouldn't the user's name be used as the primary key?
+
+What are containers? Why would they be useful here? Hint: you might have had
+a little trouble compiling at first. 
+
+If you have time / interest, run your application using docker. Paste your
+command below.
+
