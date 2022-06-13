@@ -29,3 +29,17 @@ Your assignment:
     - Create a test case where open outperforms chained
     - Graph interesting results and write a short report in LaTeX for the 
       Amazoff development team
+
+
+Part 3:
+With the help of your report, Amazoff developers have been able to find use
+cases for each of your hash table implementations. However, given the growing
+volume of customers and transactions, they are planning to move to databases
+for housing the majority of their data. Amazoff developers know the C++ API is
+rather inconvenient, so they only ask for you to implement one small component.
+
+Your assignment:
+
+    - Implement UserTable.h in db
+    - Answer questions in reports/db
+
