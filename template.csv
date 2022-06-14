@@ -1,2 +1,0 @@
-Map Data,,,,std::chrono,,getrusage,,perf,,,,,,,,
-Graph Type,Number of Items,Max Load Factor,Final Load Factor,ms to Fill,ms to Read,system time,max set size,L1-dcache-loads,L1-dcache-load-misses,LLC-loads,LLC-load-misses,branch-loads,branch-load-misses,cpu-cycles,instructions,
