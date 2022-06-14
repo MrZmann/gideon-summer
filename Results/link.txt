@@ -1,3 +1,0 @@
-The google sheet works. The excel document may or may not work.
-
-https://docs.google.com/spreadsheets/d/1VonnOisLv02_jTrBVZY--M5GqnQAfpYBcIIhTMQ-RF8/edit?usp=sharing
