@@ -39,19 +39,38 @@ grep -E -r -e "the .*compile"
     How many lines in the entire gideon-summer directory contain either the word "competitor" or "permitted"
 
 2
-grep -F -r -c -I -h -e "competitor" -e "permitted" | awk '{s+=$1} END {print s}'
-instead of -e twice, jus do it once and make it a regular expression
-"competitor|permitted"
+grep -E -r -c -I -h -e "competitor|permitted" | awk '{s+=$1} END {print s}'
 
     How many characters are in the last three lines of README.md?
+
+76
+tail -n 3 README.md | wc -m
     
     How many .cc files are in the gideon-summer directory? Don't use ls or grep!
 
+5
+find -regex .*\\.cc | wc -l
+
     How much space is available on the "/" mount?
+
+315446136
+df | grep -E -e ".*/$" | cut -d ' ' -f 4
 
     How many elements are there in your PATH environment variable?
 
+10
+echo $PATH : | grep -o : | wc -l
+Note - the extra : is because the first path element does not start with a colon
 
 What do the different permissions bits mean for regular files? For directories?
 
+The first bit is - for files and d for directories
+The next are three sets of three:
+each set is r,w,x for read permissions, write permissions, and execute permissions
+The three groups are user, group, other
+
 What are the tradeoffs between soft and hard links?
+
+Soft links make it easy to change the target file without changing anything that calls the target file, but has loops
+Hard links don't loop, but it is hard to change the target file.
+
