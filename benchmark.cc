@@ -76,15 +76,7 @@ std::string graphStat::getType() {
 
 std::string rUsageToCSV(rusage stat){
     std::string csv;
-    csv += std::to_string((stat.ru_utime.tv_sec * 1000ULL) + (stat.ru_utime.tv_usec / 1000ULL));
-    csv+= ",";
     csv += std::to_string((stat.ru_stime.tv_sec * 1000ULL) + (stat.ru_stime.tv_usec / 1000ULL));
-    csv+= ",";
-    csv += std::to_string(stat.ru_minflt);
-    csv+= ",";
-    csv += std::to_string(stat.ru_nvcsw);
-    csv+= ",";
-    csv += std::to_string(stat.ru_nivcsw);
     csv+= ",";
     csv += std::to_string(stat.ru_maxrss);
     csv+= ",";
@@ -138,8 +130,8 @@ graphStat testBuildTime(uint64_t mapSize, MAP_TYPE mapType, double maxLoadFactor
     //start clock for filling map
     auto time1 = std::chrono::high_resolution_clock::now();
 
-    //populate map
-    for(uint64_t i = 0; i < mapSize; ++i){
+    //populate map first 1/2
+    for(uint64_t i = 0; i < mapSize/2; ++i){
         //this overflows around i = 4.29 billion, but that shouldn't cause any problems as the value will just wrap back to 0
         map->put(i, (i+1)*(i+3));
     }
@@ -155,11 +147,13 @@ graphStat testBuildTime(uint64_t mapSize, MAP_TYPE mapType, double maxLoadFactor
     //start clock for getting every item in the map
     time1 = std::chrono::high_resolution_clock::now();
     //test getting every item in the map
-    for(uint64_t i = 0; i < mapSize; i++) {
-        if ((i+1)*(i+3) != map->get(i)) {
-            std::cerr << "Map implementation broken\n";
-            exit(1);
-        }
+    srand (time(NULL));
+    for(uint64_t i = 0; i < (5*mapSize); i++){
+    	uint64_t j = rand()%(mapSize/2);
+		if ((j+1)*(j+3) != map->get(j)) {
+			std::cerr << "Map implementation broken\n";
+			exit(1);
+		}
     }
     //stop clock for getting every item in the map and record the time it took in milliseconds
     time2 = std::chrono::high_resolution_clock::now();
@@ -170,6 +164,44 @@ graphStat testBuildTime(uint64_t mapSize, MAP_TYPE mapType, double maxLoadFactor
     }
     graphStatistics.msToRead = durMs.count();
     graphStatistics.finalLoadFactor = map->getLoadFactor();
+	
+	//populate map second 1/2
+	time1 = std::chrono::high_resolution_clock::now();
+    for(uint64_t i = mapSize/2; i < mapSize; ++i){
+        //this overflows around i = 4.29 billion, but that shouldn't cause any problems as the value will just wrap back to 0
+        map->put(i, (i+1)*(i+3));
+    }
+    //stop clock for filling map and record the time it took in milliseconds
+    time2 = std::chrono::high_resolution_clock::now();
+    durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
+    if(verbose_ >= 1) {
+        std::cout << "Time to fill " << graphStatistics.getType() << " with a max load factor of " << maxLoadFactor << ": "
+                  << durMs.count() << " milliseconds" << std::endl;
+    }
+    graphStatistics.msToFill += durMs.count();
+    
+    
+    //start clock for getting every item in the map
+    time1 = std::chrono::high_resolution_clock::now();
+    //test getting every item in the map
+    srand (time(NULL));
+    for(uint64_t i = 0; i < (10*mapSize); i++){
+    	uint64_t j = rand()%mapSize;
+		if ((j+1)*(j+3) != map->get(j)) {
+			std::cerr << "Map implementation broken\n";
+			exit(1);
+		}
+    }
+    //stop clock for getting every item in the map and record the time it took in milliseconds
+    time2 = std::chrono::high_resolution_clock::now();
+    durMs = std::chrono::duration_cast<std::chrono::milliseconds>(time2-time1);
+    if(verbose_ >= 1) {
+        std::cout << "Time to get every item in " << graphStatistics.getType() << ": " << durMs.count()
+                  << " milliseconds\n" << std::endl;
+    }
+    graphStatistics.msToRead += durMs.count();
+    graphStatistics.finalLoadFactor = map->getLoadFactor();
+	
 
     if(verbose_ >= 2){
         map->display();
