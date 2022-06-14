@@ -6,11 +6,20 @@ do? Consult the internet.
 
 What types of useful information can you measure with getrusage, with perf?
 
+getrusage:
+user time,system time,page faults without IO,context switches voulentary,context switches invoulentary,max set size
 
+perf:
+cpu-cycles,instructions,cache-references,cache-misses,branch-instructions,branch-misses,bus-cycles,L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores,LLC-loads,LLC-load-misses,LLC-stores,LLC-store-misses,dTLB-load-misses,dTLB-store-misses,iTLB-load-misses,branch-loads,branch-load-misses
 
 Which type of hash table is better, chained collisions or open addressing?
 
+Open adressing is better in nearly every metric for nearly every test case.
+However, STD Unorderd Map competes with open addressing in many regions and is also a chained map, so there is room for optimization.
 
+It would be easy to create a test case where either open or chained outperformed the other by messing with the max load factors, so I will stick with the optimal max load factors of 1.9 for chained and 0.7 for open.
+Open map outperforms chained map for every read test.
+Chained map outperformed open map for writing 3,500,000 items 
 
 Is a hash table even the right data structure at all for Amazoff's use 
 case? List some pros and cons.

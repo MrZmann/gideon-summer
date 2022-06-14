@@ -15,11 +15,11 @@ public:
 
         virtual ~HashTable() = default;
         
-        virtual Value get(Key k) = 0;
+        virtual Value get(const Key& k) = 0;
 
         virtual void put(Key k, Value v) = 0;
 
-        virtual void remove(Key k) = 0;
+        virtual void remove(const Key& k) = 0;
 
         virtual void display() = 0;
 
@@ -28,7 +28,9 @@ public:
         }
 
         virtual double getLoadFactor(){
-            std::cerr << "Unable to get Load Factor for this graph type\n";
+            //this is commented out because the python script for benchmarking calls it on standard maps and it messes with output
+            //stderr needs to be read because perf writes to sterr
+            //std::cerr << "Unable to get Load Factor for this graph type\n";
             return -1;
         }
 

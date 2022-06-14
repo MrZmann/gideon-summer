@@ -1,33 +1,76 @@
 Stop!
-If you aren't using vim already, you should try it out for this assignment. Try vimtutor if you don't get THE controls.
+If you aren't using vim already, you should try it out for this assignment. Try vimtutor if you don't get the controls.
 Also, you should be completing this report on your Linux machine if you aren't using it already.
 
-First, replace every instance of capital "THE" with "the" - you can use vim or sed. List THE command you used below.
+First, replace every instance of capital "the" with "the" - you can use vim or sed. List the command you used below.
 
-For each of THE following exercises, list your answer along with your single-line shell command for finding THE solution.
+:%s/THE/the/g
+
+For each of the following exercises, list your answer along with your single-line shell command for finding the solution.
 Try to use man pages before consulting the internet.
 
     What's your current directory?
 
-    What's THE PID of your shell?
+/home/gideon/Desktop/gideon-summer
+pwd
 
-    How many times does THE string "THE " appear in THE gideon-summer directory and all files within
+    What's the PID of your shell?
 
-    How many times does THE string "THE " appear directly in THE gideon-summer directory if you ignore case 
+23197
+echo $$
+echo $BASHPID
 
-    Which file (oTHEr than this) contains a line which has "THE " and THEn later in THE line has "compile"
+    How many times does the string "the " appear in the gideon-summer directory and all files within
+
+235
+grep -F -r -e "the" | grep -F -c -e "the"
+
+    How many times does the string "the " appear directly in the gideon-summer directory if you ignore case 
+
+71
+grep -F -i -e "the" * | grep -F -i -c -e "the"
+
+    Which file (other than this) contains a line which has "the " and then later in the line has "compile"
     
-    How many lines in THE entire gideon-summer directory contain eiTHEr THE word "competitor" or "permitted"
+reports/profiling: Templates simply replace the typenames with their times at compile time, so the code will not behave differently.
+reports/map_impl: Why doesn't the starter code compile? How did you fix it?
+grep -E -r -e "the .*compile"
 
-    How many characters are in THE last three lines of README.md?
+    How many lines in the entire gideon-summer directory contain either the word "competitor" or "permitted"
+
+2
+grep -E -r -c -I -h -e "competitor|permitted" | awk '{s+=$1} END {print s}'
+
+    How many characters are in the last three lines of README.md?
+
+76
+tail -n 3 README.md | wc -m
     
-    How many .cc files are in THE gideon-summer directory? Don't use ls or grep!
+    How many .cc files are in the gideon-summer directory? Don't use ls or grep!
 
-    How much space is available on THE "/" mount?
+5
+find -regex .*\\.cc | wc -l
 
-    How many elements are THEre in your PATH environment variable?
+    How much space is available on the "/" mount?
 
+315446136
+df | grep -E -e ".*/$" | cut -d ' ' -f 4
+
+    How many elements are there in your PATH environment variable?
+
+10
+echo $PATH : | grep -o : | wc -l
+Note - the extra : is because the first path element does not start with a colon
 
 What do the different permissions bits mean for regular files? For directories?
 
+The first bit is - for files and d for directories
+The next are three sets of three:
+each set is r,w,x for read permissions, write permissions, and execute permissions
+The three groups are user, group, other
+
 What are the tradeoffs between soft and hard links?
+
+Soft links make it easy to change the target file without changing anything that calls the target file, but has loops
+Hard links don't loop, but it is hard to change the target file.
+
