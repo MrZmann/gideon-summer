@@ -131,7 +131,6 @@ graphStat testBuildTime(uint64_t mapSize, MAP_TYPE mapType, double maxLoadFactor
     //start clock for filling map
     auto time1 = std::chrono::high_resolution_clock::now();
 
-
     //populate map first 1/2
     for(uint64_t i = 0; i < mapSize/2; ++i){
         //this overflows around i = 4.29 billion, but that shouldn't cause any problems as the value will just wrap back to 0
@@ -289,3 +288,4 @@ void read_args(int32_t argc, char** argv){
         std::cout << std::endl;
     }
 }
+
